@@ -10,7 +10,6 @@ def index(request):
     disco = psutil.disk_usage('.')
     template = loader.get_template('index.html')
     context = {
-        'nome': "Gerenciador de tarefas",
         'disco_total': formatar(disco.total),
         'disco_em_uso': formatar(disco.used),
         'disco_livre': formatar(disco.free),
@@ -21,7 +20,6 @@ def index(request):
 def processo(request):
     template = loader.get_template('processo.html')
     context = {
-        'nome': "Gerenciador de tarefas",
         'cpu_name': cpuinfo.get_cpu_info()['brand_raw'],
         'archtecture': cpuinfo.get_cpu_info()['arch'],
         'bits': cpuinfo.get_cpu_info()['bits'],
@@ -35,7 +33,6 @@ def memoria(request):
     memoria = psutil.swap_memory()
     template = loader.get_template('memoria.html')
     context = {
-        'nome': "Gerenciador de tarefas",
         'tot_memory': formatar(memoria[0]),
         'memory_used': formatar(memoria[1]),
         'memory_free': formatar(memoria[2]),
@@ -47,7 +44,6 @@ def rede(request):
     rede = psutil.net_if_addrs()
     template = loader.get_template('rede.html')
     context = {
-        'nome': "Gerenciador de tarefas",
         'interface_net': rede['Ethernet 2'][0].address,
         'internet_vel': psutil.net_if_stats()['Ethernet 2'][2],
     }

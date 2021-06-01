@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
 
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Projeto de Blobo</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
-    <script src='main.js'></script>
-</head>
+{% block content %}
+<div>
+    <h3>Processos</h3>
+</div>
 
-<body>
-    <h1>{{ nome }}</h1>
-    <div class="abas">
-        <a href="{% url 'index' %}">Disco</a>
-        <a href="{% url 'processo' %}">Processos</a>
-        <a href="{% url 'memoria' %}">Memória</a>
-        <a href="{% url 'rede' %}">Rede</a>
-    </div>
-
-    <div>
-        <h3>Processos</h3>
-    </div>
-
-    <div>
-        <p>Nome da CPU: {{ cpu_name }}</p>
-        <p>Arquitetura: {{ archtecture }}</p>
-        <p>Bits: {{ bits }}</p>
-        <p>Total de núcleos logicos: {{ nucleos_logic_tot }}</p>
-        <p>Total de núcleos fisicos: {{ nucleos_fisic_tot }}</p>
-        <p>Porcentagem usada da CPU: {{ cpu_percent }} %</p>
-    </div>
-</body>
-
-</html>
+<div>
+    <p>Nome da CPU: {{ cpu_name }}</p>
+    <p>Arquitetura: {{ archtecture }}</p>
+    <p>Bits: {{ bits }}</p>
+    <p>Total de núcleos logicos: {{ nucleos_logic_tot }}</p>
+    <p>Total de núcleos fisicos: {{ nucleos_fisic_tot }}</p>
+    <p>Porcentagem usada da CPU: {{ cpu_percent }} %</p>
+</div>
+{% endblock %}
