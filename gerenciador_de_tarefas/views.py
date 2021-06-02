@@ -24,6 +24,8 @@ def processo(request):
         'archtecture': cpuinfo.get_cpu_info()['arch'],
         'bits': cpuinfo.get_cpu_info()['bits'],
         'nucleos_logic_tot': psutil.cpu_count(logical = True),
+        'freq_total': psutil.cpu_freq().max,
+        'freq_uso': psutil.cpu_freq().current,
         'nucleos_fisic_tot': psutil.cpu_count(logical = False),
         'cpu_percent': psutil.cpu_percent(),
     }

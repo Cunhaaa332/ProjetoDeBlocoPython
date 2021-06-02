@@ -9,6 +9,18 @@
     <p>Total: {{ disco_total }} GB</p>
     <p>Disco em uso: {{ disco_em_uso }} GB</p>
     <p>Disco livre: {{ disco_livre }} GB</p>
-    <p>Percentual de disco usado: {{ disco_percentual_usado }} %</p>
+    <p id="number_percent">Percentual de disco usado: {{ disco_percentual_usado }} %</p>
 </div>
+<div class="progress bg-primary">
+    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+        id="progress-bar-disco" aria-valuemax="100"></div>
+</div>
+<script>
+    let paragrafo = document.getElementById("number_percent").innerHTML
+    let ar_paragrafo = paragrafo.split(" ")
+    let porcentagem = ar_paragrafo[4]
+    console.log(porcentagem)
+    let progress = document.getElementById("progress-bar-disco")
+    progress.style.width = porcentagem + "%"
+</script>
 {% endblock %}

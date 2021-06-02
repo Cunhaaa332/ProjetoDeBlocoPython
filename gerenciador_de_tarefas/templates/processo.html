@@ -11,6 +11,21 @@
     <p>Bits: {{ bits }}</p>
     <p>Total de núcleos logicos: {{ nucleos_logic_tot }}</p>
     <p>Total de núcleos fisicos: {{ nucleos_fisic_tot }}</p>
-    <p>Porcentagem usada da CPU: {{ cpu_percent }} %</p>
+    <p>Frequencia total: {{ freq_total }}</p>
+    <p>Frequencia de uso: {{ freq_uso }}</p>
+    <p id="cpu_porcentagem">Porcentagem usada da CPU: {{ cpu_percent }} %</p>
 </div>
+
+<div class="progress bg-primary">
+    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+        id="progress-bar-cpu" aria-valuemax="100"></div>
+</div>
+<script>
+    let paragrafo = document.getElementById("cpu_porcentagem").innerHTML
+    let ar_paragrafo = paragrafo.split(" ")
+    let porcentagem = ar_paragrafo[4]
+    console.log(porcentagem)
+    let progress = document.getElementById("progress-bar-cpu")
+    progress.style.width = porcentagem + "%"
+</script>
 {% endblock %}

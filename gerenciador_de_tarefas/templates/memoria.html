@@ -9,6 +9,18 @@
     <p>Total de memória: {{ tot_memory }} GB</p>
     <p>Memória utilizada: {{ memory_used }} GB</p>
     <p>Memória livre: {{ memory_free }} GB</p>
-    <p>Porcentagem de memória utilizada: {{ percent_memory_used }} %</p>
+    <p id="memoria_porcentagem">Porcentagem de memória utilizada: {{ percent_memory_used }} %</p>
 </div>
+<div class="progress bg-primary">
+    <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0"
+        id="progress-bar-memoria" aria-valuemax="100"></div>
+</div>
+<script>
+    let paragrafo = document.getElementById("memoria_porcentagem").innerHTML
+    let ar_paragrafo = paragrafo.split(" ")
+    let porcentagem = ar_paragrafo[4]
+    console.log(porcentagem)
+    let progress = document.getElementById("progress-bar-memoria")
+    progress.style.width = porcentagem + "%"
+</script>
 {% endblock %}
