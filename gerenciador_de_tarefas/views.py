@@ -2,18 +2,35 @@ from django.http import HttpResponse
 from django.template import loader
 import psutil
 import cpuinfo
+import os
+import time
 
 def formatar(valor):
     return round(valor/(1024*1024*1024), 2)
 
+
+
+
 def index(request):
+    lista = os.listdir()
+    dic = {}
+    for i in lista:
+        if os.path.isfile(i):
+            dic[i] = []
+            dic[i].append(os.stat(i).st_size)
+            dic[i].append(os.stat(i).st_atime)
+            dic[i].append(os.stat(i).st_mtime)
+
+    
+    
     disco = psutil.disk_usage('.')
-    template = loader.get_template('index.html')
+    template = loader.get_template('index.html')    
     context = {
         'disco_total': formatar(disco.total),
         'disco_em_uso': formatar(disco.used),
         'disco_livre': formatar(disco.free),
         'disco_percentual_usado': disco.percent,
+        'arquivos': dic,
     }
     return HttpResponse(template.render(context, request))
 
