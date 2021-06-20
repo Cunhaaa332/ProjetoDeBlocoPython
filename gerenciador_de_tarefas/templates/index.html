@@ -10,9 +10,6 @@
     <p>Disco em uso: {{ disco_em_uso }} GB</p>
     <p>Disco livre: {{ disco_livre }} GB</p>
     <p id="number_percent">Percentual de disco usado: {{ disco_percentual_usado }} %</p>
-    {% for key, value in arquivos.items %}
-        <p>{{ key }} Tamanho: {{ value.0 }} / Data de Modificação: {{ value.1 }} / Data de Criação: {{ value.2 }}</p>
-    {% endfor %}
 </div>
 <div class="progress bg-primary">
     <div class="progress-bar progress-bar-striped bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0"

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+    <h3>Arquivos</h3>
+</div>
+
+<div>
+    {% for key, value in arquivos.items %}
+    <p>{{ key }} Tamanho: {{ value.0 }} / Data de Modificação: {{ value.1 }} / Data de Criação: {{ value.2 }}</p>
+    {% endfor %}
+</div>
+{% endblock %}
