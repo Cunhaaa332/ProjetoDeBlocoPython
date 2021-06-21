@@ -14,7 +14,7 @@
     <p>Frequencia total: {{ freq_total }}</p>
     <p>Frequencia de uso: {{ freq_uso }}</p>
 </div>
-{% for core_percent in cpu_percent %}
+{% for core_percent in cores %}
 <div>
     <p id="cpu_porcentagem_{{ forloop.counter }}">Porcentagem usada do core {{ forloop.counter }}: {{ core_percent }} %
     </p>
@@ -30,14 +30,14 @@
     function ProgressBar(id_core_cpu, id_progress_bar) {
         let paragrafo = document.getElementById(id_core_cpu).innerHTML
         let ar_paragrafo = paragrafo.split(" ")
-        console.log(ar_paragrafo)
         let porcentagem = ar_paragrafo[5]
-        console.log(porcentagem)
         let progress = document.getElementById(id_progress_bar)
         progress.style.width = porcentagem + "%"
     }
 
-    for (let i = 1; ; i++) {
+    let cores_tamanho = "{{ cores }}"
+
+    for (let i = 1; i < cores_tamanho.length ; i++) {
         ProgressBar("cpu_porcentagem_" + i, "progress-bar-cpu-" + i)
     }
 

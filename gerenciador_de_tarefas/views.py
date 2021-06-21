@@ -4,14 +4,14 @@ import psutil
 import cpuinfo
 import os
 import time
-import subprocess
 
 def formatar(valor):
     return round(valor/(1024*1024*1024), 2)
 
+
 def index(request):
     disco = psutil.disk_usage('.')
-    template = loader.get_template('index.html')    
+    template = loader.get_template('index.html')
     context = {
         'disco_total': formatar(disco.total),
         'disco_em_uso': formatar(disco.used),
@@ -19,6 +19,7 @@ def index(request):
         'disco_percentual_usado': disco.percent,
     }
     return HttpResponse(template.render(context, request))
+
 
 def processador(request):
     cores = []
@@ -30,13 +31,14 @@ def processador(request):
         'cpu_name': cpuinfo.get_cpu_info()['brand_raw'],
         'archtecture': cpuinfo.get_cpu_info()['arch'],
         'bits': cpuinfo.get_cpu_info()['bits'],
-        'nucleos_logic_tot': psutil.cpu_count(logical = True),
+        'nucleos_logic_tot': psutil.cpu_count(logical=True),
         'freq_total': psutil.cpu_freq().max,
         'freq_uso': psutil.cpu_freq().current,
-        'nucleos_fisic_tot': psutil.cpu_count(logical = False),
-        'cpu_percent': cores,
+        'nucleos_fisic_tot': psutil.cpu_count(logical=False),
+        'cores': cores,
     }
     return HttpResponse(template.render(context, request))
+
 
 def memoria(request):
     memoria = psutil.swap_memory()
@@ -49,6 +51,7 @@ def memoria(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def rede(request):
     rede = psutil.net_if_addrs()
     template = loader.get_template('rede.html')
@@ -58,48 +61,57 @@ def rede(request):
     }
     return HttpResponse(template.render(context, request))
 
+
 def arquivos(request):
-    lista = os.listdir()
-    dic = {}
-    for i in lista:
+    listaArquivos = os.listdir()
+    print(listaArquivos)
+    dicArquivos = {}
+    for i in listaArquivos:
         if os.path.isfile(i):
-            dic[i] = []
-            dic[i].append(os.stat(i).st_size)
-            dic[i].append(os.stat(i).st_atime)
-            dic[i].append(os.stat(i).st_mtime)
+            dicArquivos[i] = []
+            dicArquivos[i].append(os.stat(i).st_size)
+            dicArquivos[i].append(time.ctime(os.stat(i).st_atime))
+            dicArquivos[i].append(time.ctime(os.stat(i).st_mtime))
+        print(dicArquivos)
+        print(i)
     template = loader.get_template('arquivos.html')
     context = {
-        'arquivos': dic,
+        'arquivos': dicArquivos,
     }
     return HttpResponse(template.render(context, request))
+
 
 def sub_processos(request):
     def mostra_info(pid):
         try:
             p = psutil.Process(pid)
-            texto = '{:6}'.format(pid)
-            texto = texto + '{:11}'.format(p.num_threads())
-            texto = texto + " " + time.ctime(p.create_time()) + " "
-            texto = texto + '{:8.2f}'.format(p.cpu_times().user)
-            texto = texto + '{:8.2f}'.format(p.cpu_times().system)
-            texto = texto + '{:10.2f}'.format(p.memory_percent()) + " MB"
             rss = p.memory_info().rss/1024/1024
-            texto = texto + '{:10.2f}'.format(rss) + " MB"
             vms = p.memory_info().vms/1024/1024
-            texto = texto + '{:10.2f}'.format(vms) + " MB"
-            texto = texto + " " + p.exe()
-            return texto
+            memory_percent = p.memory_percent()
+            cpu_times_user = p.cpu_times().user
+            cpu_times_system = p.cpu_times().system
+            dict_info = {
+                'pid': pid,
+                'num_threads': p.num_threads(),
+                'create_time':  time.ctime(p.create_time()),
+                'cpu_times_user': '{:8.2f}'.format(cpu_times_user),
+                'cpu_times_system': '{:8.2f}'.format(cpu_times_system),
+                'memory_percent': '{:10.2f}'.format(memory_percent) + " MB",
+                'rss': '{:10.2f}'.format(rss) + " MB",
+                'vms': '{:10.2f}'.format(vms) + " MB",
+                'exe': p.exe()
+            }
+            return dict_info
         except:
-            pass  
+            pass
 
-    lista = psutil.pids()
-    novaLista = []
+    listaProcessos = psutil.pids()
+    novaListaProcessos = []
 
-    for i in lista:
-        novaLista.append(mostra_info(i))
-
+    for i in listaProcessos:
+        novaListaProcessos.append(mostra_info(i))
     template = loader.get_template('sub_processos.html')
     context = {
-        'processos': novaLista,
+        'processos': novaListaProcessos,
     }
     return HttpResponse(template.render(context, request))

@@ -5,9 +5,57 @@
     <h3>Sub Processos</h3>
 </div>
 
-{% for processo in processos%}
-<div>
-    <p>{{ processo }}</p>
-</div>
-{% endfor %}
+<table class="table">
+    <thead>
+        <div class="row align-items-start">
+            <tr>
+                <th scope="col">PID</th>
+                <th scope="col">Nº de Threads</th>
+                <th scope="col">Data de criação</th>
+                <th scope="col">Cpu usuário</th>
+                <th scope="col">Cpu sistema</th>
+                <th scope="col">Porcentagem da memória</th>
+                <th scope="col">Rss</th>
+                <th scope="col">Vms</th>
+                <th scope="col">Exe</th>
+            </tr>
+        </div>
+    </thead>
+    <tbody>
+        {% for p in processos %}
+        <tr>
+            <td>
+                {{p.pid}}
+            </td>
+            <td>
+                {{p.num_threads}}
+            </td>
+            <td>
+                {{p.create_time}}
+            </td>
+            <td>
+                {{p.cpu_times_user}}
+            </td>
+            <td>
+                {{p.cpu_times_system}}
+            </td>
+            <td>
+                {{p.memory_percent}}
+            </td>
+            <td>
+                {{p.rss}}
+            </td>
+            <td>
+                {{p.vms}}
+            </td>
+            <td>
+                {{p.exe}}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<script>
+    console.log("{{processos}}")
+</script>
 {% endblock %}
