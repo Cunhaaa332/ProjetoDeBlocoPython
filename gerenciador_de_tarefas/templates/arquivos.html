@@ -5,9 +5,35 @@
     <h3>Arquivos</h3>
 </div>
 
-<div>
-    {% for key, value in arquivos.items %}
-    <p>{{ key }} Tamanho: {{ value.0 }} bytes / Data de Modificação: {{ value.1 }} / Data de Criação: {{ value.2 }} {{value.3}}</p>
-    {% endfor %}
-</div>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">Nome</th>
+            <th scope="col">Tamanho</th>
+            <th scope="col">Data de Modificação</th>
+            <th scope="col">Data de Criação</th>
+            <th scope="col">Tipo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for key, value in arquivos.items %}
+        <tr>
+            <td>
+                {{ key }}
+            </td>
+            <td>
+                {{ value.0 }}
+            </td>
+            <td>
+                {{ value.1 }}
+            </td>
+            <td>
+                {{ value.2 }}
+            </td>
+            <td>
+                {{ value.3 }}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
