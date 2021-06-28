@@ -5,21 +5,19 @@
     <h3>Sub Processos</h3>
 </div>
 
-<table class="table">
-    <thead>
-        <div class="row align-items-start">
-            <tr>
-                <th scope="col">PID</th>
-                <th scope="col">Nº de Threads</th>
-                <th scope="col">Data de criação</th>
-                <th scope="col">Cpu usuário</th>
-                <th scope="col">Cpu sistema</th>
-                <th scope="col">Porcentagem da memória</th>
-                <th scope="col">Rss</th>
-                <th scope="col">Vms</th>
-                <th scope="col">Exe</th>
-            </tr>
-        </div>
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th scope="col">PID</th>
+            <th scope="col">Nº de Threads</th>
+            <th scope="col">Data de criação</th>
+            <th scope="col">Cpu usuário</th>
+            <th scope="col">Cpu sistema</th>
+            <th scope="col">Porcentagem da memória</th>
+            <th scope="col">Rss</th>
+            <th scope="col">Vms</th>
+            <th scope="col">Exe</th>
+        </tr>
     </thead>
     <tbody>
         {% for p in processos %}

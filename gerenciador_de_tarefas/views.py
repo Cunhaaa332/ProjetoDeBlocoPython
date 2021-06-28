@@ -63,20 +63,19 @@ def rede(request):
 
 
 def arquivos(request):
-    listaArquivos = os.listdir()
+    path = os.path.expanduser("~\\Documents")
+    listaArquivos = os.listdir(path)
     print(listaArquivos)
     dicArquivos = {}
-    for i in listaArquivos:
-        if os.path.isfile(i):
-            dicArquivos[i] = []
-            dicArquivos[i].append(os.stat(i).st_size)
-            dicArquivos[i].append(time.ctime(os.stat(i).st_atime))
-            dicArquivos[i].append(time.ctime(os.stat(i).st_mtime))
-        print(dicArquivos)
-        print(i)
+    # for i in listaArquivos:
+    #     dicArquivos[i] = []
+    #     dicArquivos[i].append(os.stat(i))
+        # dicArquivos[i].append(time.ctime(os.stat(i).st_atime))
+        # dicArquivos[i].append(time.ctime(os.stat(i).st_mtime))
+    print(dicArquivos)
     template = loader.get_template('arquivos.html')
     context = {
-        'arquivos': dicArquivos,
+        'arquivos': listaArquivos,
     }
     return HttpResponse(template.render(context, request))
 
