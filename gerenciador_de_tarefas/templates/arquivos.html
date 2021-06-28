@@ -6,11 +6,8 @@
 </div>
 
 <div>
-    <!-- {% for key, value in arquivos.items %}
-    <p>{{ key }} Tamanho: {{ value.0 }} / Data de Modificação: {{ value.1 }} / Data de Criação: {{ value.2 }}</p>
-    {% endfor %} -->
-    {% for value in arquivos %}
-    <p>{{ value }}</p>
+    {% for key, value in arquivos.items %}
+    <p>{{ key }} Tamanho: {{ value.0 }} bytes / Data de Modificação: {{ value.1 }} / Data de Criação: {{ value.2 }} {{value.3}}</p>
     {% endfor %}
 </div>
 {% endblock %}
