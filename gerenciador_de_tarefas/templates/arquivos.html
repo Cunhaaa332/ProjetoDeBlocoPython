@@ -6,6 +6,15 @@
 </div>
 
 <table class="table table-bordered">
+    <form method="POST" action="{% url 'arquivos' %}">{% csrf_token %}
+        <Label for="dir">Diretório desejado:</Label>
+        <input type="text" name="dir"/>
+        <input type="submit" name="submit"/>
+        <p>Caminhos rápidos: </p>
+        <button type="submit" name="dirButton" value="Documents" class="btn btn-warning"> Documents </button>
+        <button type="submit" name="dirButton" value="Desktop" class="btn btn-warning"> Desktop </button>
+    </form>
+    {% if arquivos %}
     <thead class="table-dark">
         <tr>
             <th scope="col">Nome</th>
@@ -22,7 +31,7 @@
                 {{ key }}
             </td>
             <td>
-                {{ value.0 }}
+                {{ value.0 }} Bytes
             </td>
             <td>
                 {{ value.1 }}
@@ -35,5 +44,6 @@
         </tr>
         {% endfor %}
     </tbody>
+    {% endif %}
 </table>
 {% endblock %}

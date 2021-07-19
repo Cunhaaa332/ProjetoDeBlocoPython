@@ -1,13 +1,33 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.template import loader
 import psutil
 import cpuinfo
 import os
 import time
+import sched
+
+scheduler = sched.scheduler(time.time, time.sleep)
 
 def formatar(valor):
     return round(valor/(1024*1024*1024), 2)
 
+def listarArquivos(caminho, caminhoRapido, dicArquivos):
+    if (caminho != None or caminhoRapido != None):
+        if(caminhoRapido != None):
+            path = os.path.expanduser("~\\" + caminhoRapido)
+        else:
+            path = caminho
+        os.chdir(path)
+        listaArquivos = os.listdir(path)
+        for i in listaArquivos:
+            dicArquivos[i] = []
+            dicArquivos[i].append(os.stat(i).st_size)
+            dicArquivos[i].append(time.ctime(os.stat(i).st_atime))
+            dicArquivos[i].append(time.ctime(os.stat(i).st_mtime))
+            if(os.path.isfile(i)):
+                dicArquivos[i].append("Arquivo")
+            else:
+                dicArquivos[i].append("Pasta")
 
 def index(request):
     disco = psutil.disk_usage('.')
@@ -63,25 +83,19 @@ def rede(request):
 
 
 def arquivos(request):
-    path = os.path.expanduser("~\\Documents")
-    os.chdir(path)
-    listaArquivos = os.listdir(path)
     dicArquivos = {}
-    for i in listaArquivos:
-        dicArquivos[i] = []
-        dicArquivos[i].append(os.stat(i).st_size)
-        dicArquivos[i].append(time.ctime(os.stat(i).st_atime))
-        dicArquivos[i].append(time.ctime(os.stat(i).st_mtime))
-        if(os.path.isfile(i)):
-            dicArquivos[i].append("Arquivo")
-        else:
-            dicArquivos[i].append("Pasta")
+    caminho = request.POST.get('dir')
+    caminhoRapido = request.POST.get('dirButton')
+    listarArquivos(caminho, caminhoRapido, dicArquivos)
+    print("Evento iniciado em: ", time.ctime())
+    scheduler.enter(0, 1, listarArquivos, ('','', {}))
+    scheduler.run()
+    print("Evento terminado em: ", time.ctime())
     template = loader.get_template('arquivos.html')
     context = {
         'arquivos': dicArquivos,
     }
     return HttpResponse(template.render(context, request))
-
 
 def sub_processos(request):
     def mostra_info(pid):
