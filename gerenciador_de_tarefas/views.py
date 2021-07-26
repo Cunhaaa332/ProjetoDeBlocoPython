@@ -1,4 +1,5 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
+from django.core.paginator import Paginator
 from django.template import loader
 import psutil
 import cpuinfo
@@ -126,8 +127,16 @@ def sub_processos(request):
 
     for i in listaProcessos:
         novaListaProcessos.append(mostra_info(i))
+    
+    subProcessosPaginator = Paginator(novaListaProcessos, 10)
+
+    page_num = request.GET.get('page')
+
+    page = subProcessosPaginator.get_page(page_num)
+
     template = loader.get_template('sub_processos.html')
+
     context = {
-        'processos': novaListaProcessos,
+        'page': page,
     }
     return HttpResponse(template.render(context, request))

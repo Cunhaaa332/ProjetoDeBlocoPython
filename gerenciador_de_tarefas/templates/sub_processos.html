@@ -1,59 +1,45 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div>
-    <h3>Sub Processos</h3>
+  <h3>Sub Processos - Página {{ page.number}}</h3>
 </div>
 
 <table class="table table-bordered">
-    <thead class="table-dark">
-        <tr>
-            <th scope="col">PID</th>
-            <th scope="col">Nº de Threads</th>
-            <th scope="col">Data de criação</th>
-            <th scope="col">Cpu usuário</th>
-            <th scope="col">Cpu sistema</th>
-            <th scope="col">Porcentagem da memória</th>
-            <th scope="col">Rss</th>
-            <th scope="col">Vms</th>
-            <th scope="col">Exe</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for p in processos %}
-        <tr>
-            <td>
-                {{p.pid}}
-            </td>
-            <td>
-                {{p.num_threads}}
-            </td>
-            <td>
-                {{p.create_time}}
-            </td>
-            <td>
-                {{p.cpu_times_user}}
-            </td>
-            <td>
-                {{p.cpu_times_system}}
-            </td>
-            <td>
-                {{p.memory_percent}}
-            </td>
-            <td>
-                {{p.rss}}
-            </td>
-            <td>
-                {{p.vms}}
-            </td>
-            <td>
-                {{p.exe}}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">PID</th>
+      <th scope="col">Nº de Threads</th>
+      <th scope="col">Data de criação</th>
+      <th scope="col">Cpu usuário</th>
+      <th scope="col">Cpu sistema</th>
+      <th scope="col">Porcentagem da memória</th>
+      <th scope="col">Rss</th>
+      <th scope="col">Vms</th>
+      <th scope="col">Exe</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in page.object_list %}
+    <tr>
+      <td>{{p.pid}}</td>
+      <td>{{p.num_threads}}</td>
+      <td>{{p.create_time}}</td>
+      <td>{{p.cpu_times_user}}</td>
+      <td>{{p.cpu_times_system}}</td>
+      <td>{{p.memory_percent}}</td>
+      <td>{{p.rss}}</td>
+      <td>{{p.vms}}</td>
+      <td>{{p.exe}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
-<script>
-    console.log("{{processos}}")
-</script>
+
+<div>
+  {% if page.has_previous %}
+  <a href="{% url 'sub_processos' %}?page={{page.previous_page_number}}">Previous Page</a>
+  {% endif %} 
+  {% if page.has_next %}
+  <a href="{% url 'sub_processos' %}?page={{page.next_page_number}}">Next Page</a>
+  {% endif %}
+</div>
 {% endblock %}
