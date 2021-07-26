@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.template import loader
+from .models import SchedTime
 import psutil
 import cpuinfo
 import os
@@ -88,14 +89,16 @@ def arquivos(request):
     caminho = request.POST.get('dir')
     caminhoRapido = request.POST.get('dirButton')
     listarArquivos(caminho, caminhoRapido, dicArquivos)
-    print("Evento iniciado em: ", time.ctime())
+    eventoIniciado = time.ctime()
     scheduler.enter(0, 1, listarArquivos, ('','', {}))
     scheduler.run()
-    print("Evento terminado em: ", time.ctime())
+    eventoTerminado = time.ctime()
     template = loader.get_template('arquivos.html')
     context = {
         'arquivos': dicArquivos,
     }
+    schedTime = SchedTime(start_time=eventoIniciado, stop_time=eventoTerminado)
+    schedTime.save()
     return HttpResponse(template.render(context, request))
 
 def sub_processos(request):
@@ -129,13 +132,9 @@ def sub_processos(request):
         novaListaProcessos.append(mostra_info(i))
     
     subProcessosPaginator = Paginator(novaListaProcessos, 10)
-
     page_num = request.GET.get('page')
-
     page = subProcessosPaginator.get_page(page_num)
-
     template = loader.get_template('sub_processos.html')
-
     context = {
         'page': page,
     }
