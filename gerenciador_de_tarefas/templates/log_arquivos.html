@@ -1,1 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block content %}
+<a href="{% url 'arquivos'%}">Voltar</a>
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Data início</th>
+      <th scope="col">Data fim</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for sched in scheds %}
+    <tr>
+      <td>{{sched.id}}</td>
+      <td>{{sched.start_time}}</td>
+      <td>{{sched.stop_time}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock%}

@@ -198,9 +198,18 @@ def sub_processos(request):
     }
     return HttpResponse(template.render(context, request))
 
-def logArquivos(request):
 
+def logArquivos(request):
+    listaInformacoes = []
+    for s in SchedTime.objects.values_list('id', 'start_time', 'stop_time'):
+        dict = {
+            'id': s[0],
+            'start_time': s[1],
+            'stop_time': s[2]
+        }
+        listaInformacoes.append(dict)
     template = loader.get_template('log_arquivos.html')
     context = {
+        'scheds': listaInformacoes
     }
     return HttpResponse(template.render(context, request))

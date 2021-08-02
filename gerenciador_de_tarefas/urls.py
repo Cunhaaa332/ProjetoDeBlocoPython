@@ -8,6 +8,6 @@ urlpatterns = [
     path('memoria/', views.memoria, name='memoria'),
     path('rede/', views.rede, name='rede'),
     path('arquivos/', views.arquivos, name='arquivos'),
-    path('logArquivos/', views.logArquivos, name='logArquivos'),
+    path('arquivos/logArquivos/', views.logArquivos, name='log_arquivos'),
     path('sub_processos/', views.sub_processos, name='sub_processos'),
 ]
