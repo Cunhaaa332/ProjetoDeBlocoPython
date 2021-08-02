@@ -7,11 +7,63 @@ import cpuinfo
 import os
 import time
 import sched
+import socket
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
+
 def formatar(valor):
     return round(valor/(1024*1024*1024), 2)
+
+
+def pegarInformacoesRedes():
+    processos = psutil.pids()
+    lista = []
+
+    for i in processos:
+        processo = psutil.Process(i)
+        informacaoRedes = processo.connections()
+        if (len(informacaoRedes) > 0):
+            if(len(informacaoRedes[0].raddr) > 0):
+                enderecoRemoto = informacaoRedes[0].raddr[0]
+                portaRemota = informacaoRedes[0].raddr[1]
+            informacoesProcessos = {
+                'pid': i,
+                'tipoEndereco': obtem_nome_familia(informacaoRedes[0].family),
+                'tipo': obtem_tipo_socket(informacaoRedes[0].type),
+                'status': informacaoRedes[0].status,
+                'endereco': informacaoRedes[0].laddr[0],
+                'portaLocal': informacaoRedes[0].laddr[1],
+                'enderecoRemoto': enderecoRemoto,
+                'portaRemota': portaRemota
+            }
+            lista.append(informacoesProcessos)
+        else:
+            lista.append({'pid': i})
+    return lista
+
+
+def obtem_nome_familia(familia):
+    if familia == socket.AF_INET:
+        return("IPv4")
+    elif familia == socket.AF_INET6:
+        return("IPv6")
+    elif familia == socket.AF_UNIX:
+        return("Unix")
+    else:
+        return("-")
+
+
+def obtem_tipo_socket(tipo):
+    if tipo == socket.SOCK_STREAM:
+        return("TCP")
+    elif tipo == socket.SOCK_DGRAM:
+        return("UDP")
+    elif tipo == socket.SOCK_RAW:
+        return("IP")
+    else:
+        return("-")
+
 
 def listarArquivos(caminho, caminhoRapido, dicArquivos):
     if (caminho != None or caminhoRapido != None):
@@ -30,6 +82,7 @@ def listarArquivos(caminho, caminhoRapido, dicArquivos):
                 dicArquivos[i].append("Arquivo")
             else:
                 dicArquivos[i].append("Pasta")
+
 
 def index(request):
     disco = psutil.disk_usage('.')
@@ -76,10 +129,14 @@ def memoria(request):
 
 def rede(request):
     rede = psutil.net_if_addrs()
+
+    informacoes = pegarInformacoesRedes()
+
     template = loader.get_template('rede.html')
     context = {
         'interface_net': rede['Ethernet 2'][0].address,
         'internet_vel': psutil.net_if_stats()['Ethernet 2'][2],
+        'informacoesProcessos': informacoes
     }
     return HttpResponse(template.render(context, request))
 
@@ -90,7 +147,7 @@ def arquivos(request):
     caminhoRapido = request.POST.get('dirButton')
     listarArquivos(caminho, caminhoRapido, dicArquivos)
     eventoIniciado = time.ctime()
-    scheduler.enter(0, 1, listarArquivos, ('','', {}))
+    scheduler.enter(0, 1, listarArquivos, ('', '', {}))
     scheduler.run()
     eventoTerminado = time.ctime()
     template = loader.get_template('arquivos.html')
@@ -100,6 +157,7 @@ def arquivos(request):
     schedTime = SchedTime(start_time=eventoIniciado, stop_time=eventoTerminado)
     schedTime.save()
     return HttpResponse(template.render(context, request))
+
 
 def sub_processos(request):
     def mostra_info(pid):
@@ -130,12 +188,19 @@ def sub_processos(request):
 
     for i in listaProcessos:
         novaListaProcessos.append(mostra_info(i))
-    
+
     subProcessosPaginator = Paginator(novaListaProcessos, 10)
     page_num = request.GET.get('page')
     page = subProcessosPaginator.get_page(page_num)
     template = loader.get_template('sub_processos.html')
     context = {
         'page': page,
+    }
+    return HttpResponse(template.render(context, request))
+
+def logArquivos(request):
+
+    template = loader.get_template('log_arquivos.html')
+    context = {
     }
     return HttpResponse(template.render(context, request))

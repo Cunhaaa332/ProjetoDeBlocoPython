@@ -1,49 +1,55 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div>
-    <h3>Arquivos</h3>
+  <h3>Arquivos</h3>
 </div>
 
 <table class="table table-bordered">
-    <form method="POST" action="{% url 'arquivos' %}">{% csrf_token %}
-        <Label for="dir">Diretório desejado:</Label>
-        <input type="text" name="dir"/>
-        <input type="submit" name="submit"/>
-        <p>Caminhos rápidos: </p>
-        <button type="submit" name="dirButton" value="Documents" class="btn btn-warning"> Documents </button>
-        <button type="submit" name="dirButton" value="Desktop" class="btn btn-warning"> Desktop </button>
-    </form>
-    {% if arquivos %}
-    <thead class="table-dark">
-        <tr>
-            <th scope="col">Nome</th>
-            <th scope="col">Tamanho</th>
-            <th scope="col">Data de Modificação</th>
-            <th scope="col">Data de Criação</th>
-            <th scope="col">Tipo</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for key, value in arquivos.items %}
-        <tr>
-            <td>
-                {{ key }}
-            </td>
-            <td>
-                {{ value.0 }} Bytes
-            </td>
-            <td>
-                {{ value.1 }}
-            </td>
-            <td>
-                {{ value.2 }}
-            </td>
-            <td>
-                {{ value.3 }}
-        </tr>
-        {% endfor %}
-    </tbody>
-    {% endif %}
+  <form method="POST" action="{% url 'arquivos' %}">
+    {% csrf_token %}
+    <label for="dir">Diretório desejado:</label>
+    <input type="text" name="dir" />
+    <input type="submit" name="submit" />
+    <p>Caminhos rápidos:</p>
+    <button
+      type="submit"
+      name="dirButton"
+      value="Documents"
+      class="btn btn-warning"
+    >
+      Documents
+    </button>
+    <button
+      type="submit"
+      name="dirButton"
+      value="Desktop"
+      class="btn btn-warning"
+    >
+      Desktop
+    </button>
+  </form>
+  {% if arquivos %}
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Nome</th>
+      <th scope="col">Tamanho</th>
+      <th scope="col">Data de Modificação</th>
+      <th scope="col">Data de Criação</th>
+      <th scope="col">Tipo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for key, value in arquivos.items %}
+    <tr>
+      <td>{{ key }}</td>
+      <td>{{ value.0 }} Bytes</td>
+      <td>{{ value.1 }}</td>
+      <td>{{ value.2 }}</td>
+      <td>{{ value.3 }}</td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+  {% endif %}
 </table>
+<a href="{% url 'logArquivos' %}">Log da página</a>
 {% endblock %}

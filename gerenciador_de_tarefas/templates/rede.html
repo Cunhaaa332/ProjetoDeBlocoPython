@@ -1,12 +1,39 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div>
-    <h3>Rede</h3>
+  <h3>Rede</h3>
 </div>
 
 <div>
-    <p>Máscara de rede: {{ interface_net }}</p>
-    <p>Velocidade de internet: {{ internet_vel }} MB</p>
+  <p>Máscara de rede: {{ interface_net }}</p>
+  <p>Velocidade de internet: {{ internet_vel }} MB</p>
 </div>
+
+<table class="table table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">PID</th>
+      <th scope="col">Tipo do endereço</th>
+      <th scope="col">Tipo</th>
+      <th scope="col">Status</th>
+      <th scope="col">Endereço</th>
+      <th scope="col">Porta Local</th>
+      <th scope="col">Endereço Remoto</th>
+      <th scope="col">Porta Remota</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in informacoesProcessos %}
+    <tr>
+      <td>{{p.pid}}</td>
+      <td>{{p.tipoEndereco}}</td>
+      <td>{{p.tipo}}</td>
+      <td>{{p.status}}</td>
+      <td>{{p.endereco}}</td>
+      <td>{{p.portaLocal}}</td>
+      <td>{{p.enderecoRemoto}}</td>
+      <td>{{p.portaRemota}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
