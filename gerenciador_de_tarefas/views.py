@@ -3,16 +3,9 @@ from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.template import loader
 from .models import SchedTime
-from matplotlib import style
+
 import matplotlib.pyplot as plt
-import psutil
-import cpuinfo
-import os
-import time
-import sched
-import socket
-import io
-import urllib
+import psutil, cpuinfo, os, time, sched, socket, io, urllib
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -163,6 +156,7 @@ def rede(request):
     context = {
         'interface_net': rede['Ethernet 2'][0].address,
         'internet_vel': psutil.net_if_stats()['Ethernet 2'][2],
+        'mascara': rede['Ethernet 2'][0].netmask,
         'informacoesProcessos': informacoes
     }
     return HttpResponse(template.render(context, request))
