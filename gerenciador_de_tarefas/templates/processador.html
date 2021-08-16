@@ -1,8 +1,8 @@
 {% extends 'base.html' %} {% block content %}
 <div>
-  <h3>Processos</h3>
+  <h3>Processador</h3>
 </div>
-<img src="data:image/png;base64,{{ graficoUrl }}" alt="" height="550" width="700" />
+
 <div>
   <p>Nome da CPU: {{ cpu_name }}</p>
   <p>Arquitetura: {{ archtecture }}</p>
@@ -11,31 +11,48 @@
   <p>Total de núcleos fisicos: {{ nucleos_fisic_tot }}</p>
   <p>Frequencia total: {{ freq_total }}</p>
   <p>Frequencia de uso: {{ freq_uso }}</p>
+
+  <button type="button" id="button_progress_bar" onclick="ShowGraph()">
+    Gráfico
+  </button>
+  <button type="button" id="button_progress_bar" onclick="ShowProgressBar()">
+    Progress bar por CPU
+  </button>
 </div>
-{% for core_percent in cores %}
-<div>
-  <p id="cpu_porcentagem_{{ forloop.counter }}">
-    Porcentagem usada do core {{ forloop.counter }}: {{ core_percent }} %
-  </p>
+<div id="progress_bar" style="display: none;">
+  {% for core_percent in cores %}
+  <div>
+    <p id="cpu_porcentagem_{{ forloop.counter }}">
+      Porcentagem usada do core {{ forloop.counter }}: {{ core_percent }} %
+    </p>
+  </div>
+  <div class="progress bg-primary" id="barrinha">
+    <div
+      class="progress-bar progress-bar-striped bg-danger"
+      role="progressbar"
+      aria-valuenow="100"
+      aria-valuemin="0"
+      id="progress-bar-cpu-{{ forloop.counter }}"
+      aria-valuemax="100"
+    ></div>
+  </div>
+  {% endfor %}
 </div>
-<div class="progress bg-primary">
-  <div
-    class="progress-bar progress-bar-striped bg-danger"
-    role="progressbar"
-    aria-valuenow="100"
-    aria-valuemin="0"
-    id="progress-bar-cpu-{{ forloop.counter }}"
-    aria-valuemax="100"
-  ></div>
+<div id="graph_cpu_percent" style="display: none;">
+  <img
+    src="data:image/png;base64,{{ graficoUrl }}"
+    alt=""
+    height="550"
+    width="700"
+  />
 </div>
-{% endfor %}
 
 <script>
   function ProgressBar(id_core_cpu, id_progress_bar) {
-    console.log(id_core_cpu)
+    console.log(id_core_cpu);
     let paragrafo = document.getElementById(id_core_cpu).innerHTML;
     let ar_paragrafo = paragrafo.split(" ");
-    let porcentagem = ar_paragrafo[9];
+    let porcentagem = ar_paragrafo[11];
     let progress = document.getElementById(id_progress_bar);
     progress.style.width = porcentagem + "%";
   }
@@ -44,6 +61,16 @@
 
   for (let i = 1; i <= JSON.parse(cores_tamanho).length; i++) {
     ProgressBar("cpu_porcentagem_" + i, "progress-bar-cpu-" + i);
+  }
+
+  function ShowGraph() {
+    document.getElementById("progress_bar").style.display = "none";
+    document.getElementById("graph_cpu_percent").style.display = "block";
+  }
+
+  function ShowProgressBar() {
+    document.getElementById("graph_cpu_percent").style.display = "none";
+    document.getElementById("progress_bar").style.display = "block";
   }
 </script>
 {% endblock %}
