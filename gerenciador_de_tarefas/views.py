@@ -1,13 +1,18 @@
+import base64
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.template import loader
 from .models import SchedTime
+from matplotlib import style
+import matplotlib.pyplot as plt
 import psutil
 import cpuinfo
 import os
 import time
 import sched
 import socket
+import io
+import urllib
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -98,8 +103,29 @@ def index(request):
 
 def processador(request):
     cores = []
+    cpu_percent = []
     for corePercent in psutil.cpu_percent(percpu=True):
         cores.append(corePercent)
+
+    for i in range(30):
+        cpu_percent_info = psutil.cpu_percent()
+        cpu_percent.append(cpu_percent_info)
+        time.sleep(0.1)
+
+    plt.figure(figsize=(10, 10))
+
+    ax = plt.subplot(1, 1, 1)
+    ax.plot(range(30), cpu_percent)
+
+    ax.set(xlabel='tempo(s)', ylabel='cpu_percent',
+           title='Gráfico de variação do uso de cpu')
+    
+    fig = plt.gcf()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
 
     template = loader.get_template('processador.html')
     context = {
@@ -111,6 +137,7 @@ def processador(request):
         'freq_uso': psutil.cpu_freq().current,
         'nucleos_fisic_tot': psutil.cpu_count(logical=False),
         'cores': cores,
+        'graficoUrl': uri
     }
     return HttpResponse(template.render(context, request))
 
