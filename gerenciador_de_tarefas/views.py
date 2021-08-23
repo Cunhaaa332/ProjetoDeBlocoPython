@@ -5,7 +5,17 @@ from django.template import loader
 from .models import SchedTime
 
 import matplotlib.pyplot as plt
-import psutil, cpuinfo, os, time, sched, socket, io, urllib
+import psutil
+import cpuinfo
+import os
+import time
+import sched
+import io
+import socket
+import io
+import urllib
+import platform
+import subprocess
 
 scheduler = sched.scheduler(time.time, time.sleep)
 
@@ -39,6 +49,47 @@ def pegarInformacoesRedes():
         else:
             lista.append({'pid': i})
     return lista
+
+
+def retorna_codigo_ping(hostname):
+    """Usa o utilitario ping do sistema operacional para encontrar   o host. ('-c 5') indica, em sistemas linux, que deve mandar 5   pacotes. ('-W 3') indica, em sistemas linux, que deve esperar 3   milisegundos por uma resposta. Esta funcao retorna o codigo de   resposta do ping """
+
+    plataforma = platform.system()
+    args = []
+    if plataforma == "Windows":
+        args = ["ping", "-n", "1", "-l", "1", "-w", "100", hostname]
+
+    else:
+        args = ['ping', '-c', '1', '-W', '1', hostname]
+
+    ret_cod = subprocess.call(args,
+                              stdout=open(os.devnull, 'w'),
+                              stderr=open(os.devnull, 'w'))
+    return ret_cod
+
+
+def verifica_hosts(base_ip):
+    """Verifica todos os host com a base_ip entre 1 e 255 retorna uma lista com todos os host que tiveram resposta 0 (ativo)"""
+    print("Mapeando\r")
+    host_validos = []
+    return_codes = dict()
+    for i in range(1, 255):
+
+        return_codes[base_ip +
+                     '{0}'.format(i)] = retorna_codigo_ping(base_ip + '{0}'.format(i))
+        if i % 20 == 0:
+            print(".", end="")
+        if return_codes[base_ip + '{0}'.format(i)] == 0:
+            host_validos.append(base_ip + '{0}'.format(i))
+    print("\nMapping ready...")
+
+    return host_validos
+
+
+def hosts_validos(ip_string):
+    ip_lista = ip_string.split('.')
+    base_ip = ".".join(ip_lista[0:3]) + '.'
+    return verifica_hosts(base_ip)
 
 
 def obtem_nome_familia(familia):
@@ -112,7 +163,7 @@ def processador(request):
 
     ax.set(xlabel='tempo(s)', ylabel='cpu_percent',
            title='Gráfico de variação do uso de cpu')
-    
+
     fig = plt.gcf()
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
@@ -152,12 +203,20 @@ def rede(request):
 
     informacoes = pegarInformacoesRedes()
 
+    ip_string = request.POST.get('ip')
+    hosts = ""
+    if(ip_string is not None):
+        hosts = hosts_validos(ip_string)
+    else:
+        hosts = ""
+
     template = loader.get_template('rede.html')
     context = {
         'interface_net': rede['Ethernet 2'][0].address,
         'internet_vel': psutil.net_if_stats()['Ethernet 2'][2],
         'mascara': rede['Ethernet 2'][0].netmask,
-        'informacoesProcessos': informacoes
+        'informacoesProcessos': informacoes,
+        'hosts_validos': hosts
     }
     return HttpResponse(template.render(context, request))
 
