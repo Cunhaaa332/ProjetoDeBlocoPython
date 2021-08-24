@@ -36,10 +36,10 @@
 
 <div>
   {% if page.has_previous %}
-  <a href="{% url 'sub_processos' %}?page={{page.previous_page_number}}">Previous Page</a>
-  {% endif %} 
+  <a href="{% url 'sub_processos' %}?page={{page.previous_page_number}}" class="btn btn-primary">Págnia Anterior</a>
+  {% endif %}
   {% if page.has_next %}
-  <a href="{% url 'sub_processos' %}?page={{page.next_page_number}}">Next Page</a>
+  <a href="{% url 'sub_processos' %}?page={{page.next_page_number}}" class="btn btn-primary">Próxima Página</a>
   {% endif %}
 </div>
 {% endblock %}
