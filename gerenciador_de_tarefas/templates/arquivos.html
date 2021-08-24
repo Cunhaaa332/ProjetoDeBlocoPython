@@ -3,27 +3,22 @@
   <h3>Arquivos</h3>
 </div>
 
-<table class="table table-bordered">
+<table class="table table-bordered mt-3">
   <form method="POST" action="{% url 'arquivos' %}">
     {% csrf_token %}
-    <label for="dir">Diretório desejado:</label>
-    <input type="text" name="dir" />
-    <input type="submit" name="submit" />
-    <p>Caminhos rápidos:</p>
-    <button
-      type="submit"
-      name="dirButton"
-      value="Documents"
-      class="btn btn-warning"
-    >
+    <div class="form-row d-flex">
+      <div class="col-2">
+        <input type="text" class="form-control" name="dir" placeholder="Entre com o diretório" />
+      </div>
+      <div class="col ms-2">
+        <button type="submit" class="btn btn-primary pl-3">Enviar</button>
+      </div>
+    </div>
+    <p class="fw-bold mt-3">Caminhos rápidos:</p>
+    <button type="submit" name="dirButton" value="Documents" class="btn btn-primary">
       Documents
     </button>
-    <button
-      type="submit"
-      name="dirButton"
-      value="Desktop"
-      class="btn btn-warning"
-    >
+    <button type="submit" name="dirButton" value="Desktop" class="btn btn-primary ms-2">
       Desktop
     </button>
   </form>
