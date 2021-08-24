@@ -4,20 +4,33 @@
 </div>
 
 <div>
-  <p>Endereço: {{ interface_net }}</p>
-  <p>Velocidade de internet: {{ internet_vel }} MB</p>
-  <p>Máscara de rede: {{ mascara }}</p>
-  <form method="POST" action="{% url 'rede' %}">
+  <div>
+    <p class="fw-bold d-inline">Endereço: </p>{{ interface_net }}
+  </div>
+  <div>
+    <p class="fw-bold d-inline">Velocidade de internet: </p>{{ internet_vel }} MB
+  </div>
+  <div>
+    <p class="fw-bold d-inline">Máscara de rede: </p>{{ mascara }}
+  </div>
+  <form class="form-inline mt-3" method="POST" action="{% url 'rede' %}">
     {% csrf_token %}
-    <label for="ip">Insira aqui seu IP: </label>
-    <input type="text" name="ip" />
-    <input type="submit" name="submit" />
+    <div class="form-row d-flex">
+      <div class="col-2">
+        <input type="text" class="form-control" name="ip" placeholder="Entre com o seu ip" />
+      </div>
+      <div class="col ms-2">
+        <button type="submit" class="btn btn-primary pl-3">Enviar</button>
+      </div>
+    </div>
+  </form>
+  <div>
     <p>
       Não sabe seu IP?
       <a href="https://whatismyipaddress.com/" target="_blank">Clique aqui </a>
     </p>
     <p>Hosts válidos: {{ hosts_validos }}</p>
-  </form>
+  </div>
 </div>
 
 <h4>Informações da rede por processos</h4>
@@ -33,7 +46,7 @@
       <th scope="col">Endereço Remoto</th>
       <th scope="col">Porta Remota</th>
     </tr>
-  </thead>  
+  </thead>
   <tbody>
     {% for p in informacoesProcessos %}
     <tr>
