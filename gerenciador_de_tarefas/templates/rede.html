@@ -5,19 +5,27 @@
 
 <div>
   <div>
-    <p class="fw-bold d-inline">Endereço: </p>{{ interface_net }}
+    <p class="fw-bold d-inline">Endereço:</p>
+    {{ interface_net }}
   </div>
   <div>
-    <p class="fw-bold d-inline">Velocidade de internet: </p>{{ internet_vel }} MB
+    <p class="fw-bold d-inline">Velocidade de internet:</p>
+    {{ internet_vel }} MB
   </div>
   <div>
-    <p class="fw-bold d-inline">Máscara de rede: </p>{{ mascara }}
+    <p class="fw-bold d-inline">Máscara de rede:</p>
+    {{ mascara }}
   </div>
   <form class="form-inline mt-3" method="POST" action="{% url 'rede' %}">
     {% csrf_token %}
     <div class="form-row d-flex">
       <div class="col-2">
-        <input type="text" class="form-control" name="ip" placeholder="Entre com o seu ip" />
+        <input
+          type="text"
+          class="form-control"
+          name="ip"
+          placeholder="Entre com o seu ip"
+        />
       </div>
       <div class="col ms-2">
         <button type="submit" class="btn btn-primary pl-3">Enviar</button>
@@ -48,7 +56,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for p in informacoesProcessos %}
+    {% for p in informacoesProcessos %} {% if p.tipoEndereco %}
     <tr>
       <td>{{p.pid}}</td>
       <td>{{p.tipoEndereco}}</td>
@@ -59,7 +67,7 @@
       <td>{{p.enderecoRemoto}}</td>
       <td>{{p.portaRemota}}</td>
     </tr>
-    {% endfor %}
+    {% endif %} {% endfor %}
   </tbody>
 </table>
 {% endblock %}

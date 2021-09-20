@@ -52,8 +52,6 @@ def pegarInformacoesRedes():
 
 
 def retorna_codigo_ping(hostname):
-    """Usa o utilitario ping do sistema operacional para encontrar   o host. ('-c 5') indica, em sistemas linux, que deve mandar 5   pacotes. ('-W 3') indica, em sistemas linux, que deve esperar 3   milisegundos por uma resposta. Esta funcao retorna o codigo de   resposta do ping """
-
     plataforma = platform.system()
     args = []
     if plataforma == "Windows":
@@ -69,11 +67,10 @@ def retorna_codigo_ping(hostname):
 
 
 def verifica_hosts(base_ip):
-    """Verifica todos os host com a base_ip entre 1 e 255 retorna uma lista com todos os host que tiveram resposta 0 (ativo)"""
     print("Mapeando\r")
     host_validos = []
     return_codes = dict()
-    for i in range(1, 255):
+    for i in range(1, 10):
 
         return_codes[base_ip +
                      '{0}'.format(i)] = retorna_codigo_ping(base_ip + '{0}'.format(i))
